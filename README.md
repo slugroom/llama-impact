@@ -13,7 +13,7 @@ Team members:
 
 - Efe
 - Josh
-- Shaker
+- Saker
 - Sigurdur Haukur
 
 *Names sorted alphabetically*
