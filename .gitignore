@@ -6,9 +6,16 @@
 # data
 *.tar.gz
 *.tar
+*.csv
 corpus
 corpus2
-
+processed
+processed/*
+processed/processed_data_0.csv
+processed/processed_data_1.csv
+processed/processed_data_2.csv
+processed/processed_data_3.csv
+processed/processed_data_4.csv
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

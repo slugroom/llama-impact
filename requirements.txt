@@ -1,4 +1,6 @@
 pandas
 datasets
 soundfile
+peft
+trl
 # transformers[torch]
