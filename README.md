@@ -18,6 +18,25 @@ Team members:
 
 *Names sorted alphabetically*
 
+
+## Todo
+
+Project Title
+
+- Short Description
+- Long Description
+- Technology & Category Tags
+
+Cover Image and Presentation
+- Cover Image
+- Video Presentation
+- Slide Presentation
+
+App Hosting & Code Repository
+- Public GitHub Repository
+- Demo Application Platform
+- Application URL
+
 ## Overview
 
 data: https://commonvoice.mozilla.org/en/datasets
