@@ -9,6 +9,12 @@
 *.csv
 corpus
 corpus2
+<<<<<<< HEAD
+
+
+results
+
+=======
 processed
 processed/*
 processed/processed_data_0.csv
@@ -17,6 +23,7 @@ processed/processed_data_2.csv
 processed/processed_data_3.csv
 processed/processed_data_4.csv
 results
+>>>>>>> main
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
