@@ -1,5 +1,13 @@
+
+
 # macos
 *.DS_Store
+
+# data
+*.tar.gz
+*.tar
+corpus
+corpus2
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
