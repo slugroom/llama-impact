@@ -16,6 +16,7 @@ processed/processed_data_1.csv
 processed/processed_data_2.csv
 processed/processed_data_3.csv
 processed/processed_data_4.csv
+results
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

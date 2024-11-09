@@ -71,16 +71,16 @@ peft_config = LoraConfig(
 
 training_arguments = TrainingArguments(
     output_dir="./results",
-    per_device_train_batch_size=1,
-    per_device_eval_batch_size=1,
-    gradient_accumulation_steps=8,
+    per_device_train_batch_size=1, # increase if you can
+    per_device_eval_batch_size=1, 
+    gradient_accumulation_steps=8, # increase when memeory issue
     optim="adamw_torch",
     save_steps=5,
     logging_steps=5,
     learning_rate=2e-4,
-    fp16=False,
+    fp16=False, # Change this to True for efficiency
     max_grad_norm=0.3,
-    max_steps=5,
+    max_steps=100,
     warmup_ratio=0.1,
     group_by_length=True,
     lr_scheduler_type="cosine",
@@ -92,7 +92,7 @@ trainer = SFTTrainer(
     model,
     train_dataset=ds["train"],
     eval_dataset=ds["test"],
-    args=SFTConfig(output_dir="/tmp"),
+    args=training_arguments,
     peft_config=peft_config,
     formatting_func=formatting_prompts_func,
     data_collator=collator,
