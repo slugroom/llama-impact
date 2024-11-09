@@ -1,9 +1,10 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class Llama_frisian:
-    def __init__(self):
-        self.tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-1B")
-        self.model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B")
+    def __init__(self, model_id="./llama3"):
+        # model_id = "meta-llama/Llama-3.2-1B"
+        self.tokenizer = AutoTokenizer.from_pretrained(model_id)
+        self.model = AutoModelForCausalLM.from_pretrained(model_id)
 
     def error_correct(self, txt):
         in_txt = f"### Prediction: {txt} ### Corrected: "
