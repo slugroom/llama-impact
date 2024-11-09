@@ -4,9 +4,9 @@ import torchaudio
 from datasets import load_dataset, Dataset
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 
-test_dataset = pd.read_csv('./cv-corpus-19.0-2024-09-13/fy-NL/test.tsv', sep='\t')
+test_dataset = pd.read_csv('./corpus/fy-NL/test.tsv', sep='\t')
 
-parent_folder = './cv-corpus-19.0-2024-09-13/fy-NL/clips/'
+parent_folder = './corpus2/fy-NL/clips/'
 test_dataset["path"] = test_dataset["path"].apply(lambda x: parent_folder + x)
 
 
