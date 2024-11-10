@@ -85,7 +85,6 @@ const checkTaskStatus = async (task_id, index) => {
                 tasks[index][1] = taskInfo.result.original;
                 tasks[index][2] = taskInfo.result.corrected;
                 tasks[index][3] = true;
-                console.log("yo mama");
             } else if (taskInfo.status === "failed") {
                 tasks[index][1] = "Error processing data.";
                 tasks[index][2] = "Error processing data.";
