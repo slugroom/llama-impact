@@ -39,6 +39,17 @@ App Hosting & Code Repository
 
 ## Overview
 
+To run the web app, you need to install the required packages.
+
+```sh
+pip install -r requirements.txt
+```
+
+Then you can run the web app with the following command:
+```sh
+flask run
+```
+
 data: https://commonvoice.mozilla.org/en/datasets
 
 ## Inspiration
