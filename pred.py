@@ -9,14 +9,14 @@ class Llama_frisian:
     def error_correct(self, txt):
         in_txt = f"### Prediction: {txt} ### Corrected: "
         model_inputs = self.tokenizer([in_txt], return_tensors="pt")
-        generated_ids = self.model.generate(**model_inputs, max_new_tokens=50)
+        generated_ids = self.model.generate(**model_inputs, max_new_tokens=50, num_beams=4, do_sample=True)
 
         return self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
 
 
-llama = Llama_frisian()
+llama = Llama_frisian("llama_finetuned")
 
-corrected = llama.error_correct("hello my name is Josh")
+corrected = llama.error_correct("dy soarch is foarn mer jochte op it rela te follen fan passin")
 
 print(corrected)

@@ -12,7 +12,7 @@ model_id = "./llama3"
 tokenizer = AutoTokenizer.from_pretrained("./llama3")
 tokenizer.pad_token = tokenizer.eos_token
 
-# model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B", load_in_8bit=True, device_map="auto")
+#model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B", load_in_8bit=True, device_map="auto")
 model = AutoModelForCausalLM.from_pretrained("./llama3")
 
 parent_dir = "./processed/"
@@ -40,7 +40,7 @@ ds = Dataset.from_pandas(df)
 ds = ds.remove_columns(["string_length", "__index_level_0__"])
 
 
-ds = ds.train_test_split(test_size=0.2)
+ds = ds.train_test_split(test_size=0.05, shuffle=False)
 
 print(ds)
 
@@ -58,7 +58,7 @@ collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=tokenize
 # PEFT config
 lora_alpha = 16
 lora_dropout = 0.1
-lora_r = 32  # 64
+lora_r = 64  # 64
 peft_config = LoraConfig(
     lora_alpha=lora_alpha,
     lora_dropout=lora_dropout,
@@ -73,14 +73,16 @@ training_arguments = TrainingArguments(
     output_dir="./results",
     per_device_train_batch_size=1, # increase if you can
     per_device_eval_batch_size=1, 
-    gradient_accumulation_steps=8, # increase when memeory issue
+    gradient_accumulation_steps=4, # increase when memeory issue
     optim="adamw_torch",
-    save_steps=5,
+    save_steps=50,
     logging_steps=5,
     learning_rate=2e-4,
     fp16=False, # Change this to True for efficiency
     max_grad_norm=0.3,
-    max_steps=100,
+    save_total_limit=3,
+    # max_steps=100,
+    num_train_epochs=2,
     warmup_ratio=0.1,
     group_by_length=True,
     lr_scheduler_type="cosine",
@@ -99,3 +101,5 @@ trainer = SFTTrainer(
 )
 
 trainer.train()
+trainer.save_model("llama_finetuned")
+tokenizer.save_pretrained("llama_finetuned")

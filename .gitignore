@@ -7,7 +7,8 @@ llama3/
 *.tar.gz
 *.tar
 *.csv
-processed/
+processed
+llama_finetuned
 corpus
 corpus2
 <<<<<<< HEAD
