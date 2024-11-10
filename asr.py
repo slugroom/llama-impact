@@ -29,11 +29,12 @@ def process_dataset_in_parallel(dataset, func, num_workers=4):
 batch_size = 64
 data_chunk_size = batch_size * 16
 pass_size = data_chunk_size * 8
-pass_count = 0
+pass_count = 7
 
 while True:
 
     test_dataset = pd.read_csv("./corpus/fy-NL/other.tsv", sep="\t")
+    print(str(pass_count * pass_size) + "/" + str(len(test_dataset)))
     if pass_count * pass_size >= len(test_dataset):
         break
     test_dataset = test_dataset[(pass_count * pass_size):((pass_count + 1) * pass_size)]
@@ -75,7 +76,7 @@ while True:
         print("Batch " + str(i // batch_size))
         
         if (i + batch_size) % data_chunk_size == 0:
-            cur_file_index = i // data_chunk_size + int(pass_count * data_chunk_size / batch_size)
+            cur_file_index = i // data_chunk_size + int(pass_count * pass_size / data_chunk_size)
             results_df = pd.DataFrame({"prediction": predictions, "reference": references})
             results_df.to_csv("./processed/processed_data_" + str(cur_file_index) + ".csv", index=False, sep="\t")
             print("Wrote file " + str(cur_file_index + 1) + " with index i at " + str(i) + " and " + str(len(predictions)) + " predictions and chunk size " + str(data_chunk_size) + ".")
