@@ -9,25 +9,45 @@ var tasks = [];
 const createTask = taskName => {
     if (taskName.length > MAX_TASKNAME_LENGTH) taskName = taskName.slice(0, MAX_TASKNAME_LENGTH) + "...";
     if (tasks.length === 0) document.getElementById("task-message").style.display = "none";
-    document.getElementById("tasks-wrapper").innerHTML += `<div class='task'>
-        <div class='task-name'>${taskName}</div>
+    const taskElement = document.createElement("div");
+    taskElement.classList.add("task");
+    taskElement.innerHTML = `
+        <div class='task-name' onclick='openTask(${tasks.length});'>${taskName}</div>
         <button class='task-button edit-button' onclick='editTask(${tasks.length});' type='button'></button>
-        <button class='task-button delete-button' onclick='editTask(${tasks.length});' type='button'></button>
-    </div>`;
+        <button class='task-button delete-button' onclick='deleteTask(${tasks.length}, this);' type='button'></button>
+    `;
+    document.getElementById("tasks-wrapper").appendChild(taskElement);
     tasks.push([
-        document.getElementsByClassName("task")[tasks.length],
+        taskElement,
         "No text available yet. Processing is in progress...",
         "No text available yet. Processing is in progress...",
         false
     ]);
 };
 
-const editTask = index => {
+const openTask = index => {
+    const taskElements = document.getElementsByClassName("task");
+    for (let i = 0; i < taskElements.length; i++) {
+        taskElements[i].style.opacity = "";
+    }
+    tasks[index][0].style.opacity = "1";
 
+    document.getElementById("original-text").innerText = tasks[index][1];
+    document.getElementById("corrected-text").innerText = tasks[index][2];
 };
 
-const deleteTask = () => {
+const editTask = index => {
+    const newName = prompt("Enter a new name for the task:");
+    if (!newName) return;
+    tasks[index][0].getElementsByClassName("task-name")[0].innerText = newName;
+};
 
+const deleteTask = (index, elm) => {
+    if (tasks[index][3]) {
+        elm.parentElement.remove();
+        tasks[index] = undefined;
+        if (tasks.length === 0) document.getElementById("task-message").style.display = "";
+    } else alert("Please wait for the task to finish.");
 };
 
 const sendData = async (blob, filename) => {

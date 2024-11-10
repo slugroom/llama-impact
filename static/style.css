@@ -40,6 +40,15 @@ h1 {
     height: 90%;
 }
 
+#original-text, #corrected-text {
+    font-family: RobotoMono;
+    color: #fff;
+    height: 40%;
+    word-wrap: break-word;
+    overflow-y: auto;
+}
+
+
 #task-panel {
     width: 20%;
     height: 90%;
@@ -51,7 +60,8 @@ h1 {
 
 #tasks-wrapper {
     display: flex;
-    flex-flow: column nowrap;
+    flex-direction: column;
+    overflow-y: auto;
     justify-content: top;
     align-items: center;
     gap: 10px;
@@ -84,6 +94,7 @@ h1 {
     border-radius: 10px;
 
     background-color: #0c2144;
+    opacity: .8;
 }
 
 .task-name {

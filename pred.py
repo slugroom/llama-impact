@@ -18,10 +18,7 @@ class Llama_frisian:
         in_txt = f"The following is a Frisian audio transcription, some parts of the transcription may be incorrect. Correct the transcription by making it grammatically and phonetically accurate.\n ### Transcription: {txt} \n ### Corrected:"
         model_inputs = self.tokenizer([in_txt], return_tensors="pt")
 
-        print("Generate")
         generated_ids = self.model.generate(**model_inputs, max_new_tokens=50, num_beams=4, do_sample=True, eos_token_id=self.tokenizer.eos_token_id)
-
-        print("Decode")
 
         # remove prompt from generated text
         corrected = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=False)[0]
@@ -55,12 +52,10 @@ class Wave2Vec2_frisian:
 
         predicted_ids = torch.argmax(logits, dim=-1)
 
-        print(self.processor.batch_decode(predicted_ids)[0])
         return self.processor.batch_decode(predicted_ids)[0]
 
     def predict(self, audio_data):
         speech = self.preprocess_audio_data(audio_data)
-        print("Predicting")
         return self.speech_to_text(speech)
 
 
