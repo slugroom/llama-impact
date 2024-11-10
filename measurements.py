@@ -12,16 +12,15 @@ normalizer = BasicTextNormalizer()
 
 llama = Llama_frisian("slugroom/llama_rjochtwurd")
 
-index = 0
 filtered_data = []
-while True:
-    file_path = f"./testing_set/processed_data_" + str(index) + ".csv"
-    
-    if not os.path.exists(file_path):
-        break
 
+parent_dir = "./testing_set"
+file_paths = os.listdir(parent_dir)
+file_paths = [parent_dir + file_path for file_path in file_paths if ".csv" in file_path]
+
+for file_path in file_paths:
     
-    print("File " + str(index))
+    print(f"Processing file: {file_path}")
     dataset = pd.read_csv(file_path, sep="\t")
     
     for _, row in dataset.iterrows():
@@ -40,16 +39,14 @@ while True:
             
             
             filtered_data.append({
-                    "prediction": prediction,
-                    "corrected": corrected,
-                    "reference": reference,
-                    "wer_pred": wer_pred,
-                    "wer_corr": wer_corr,
-                    "cer_pred": cer_corr,
-                    "cer_corr": cer_corr
-                })
-    
-    index += 1
+                "prediction": prediction,
+                "corrected": corrected,
+                "reference": reference,
+                "wer_pred": wer_pred,
+                "wer_corr": wer_corr,
+                "cer_pred": cer_corr,
+                "cer_corr": cer_corr
+            })
 
 
 new_file_path = f"./measurements.csv"
