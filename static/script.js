@@ -8,7 +8,7 @@ var tasks = [];
 
 const createTask = taskName => {
     if (taskName.length > MAX_TASKNAME_LENGTH) taskName = taskName.slice(0, MAX_TASKNAME_LENGTH) + "...";
-    if (tasks.length === 0) document.getElementById("task-message").style.display = "none";
+    if (tasks.filter(x => x).length === 0) document.getElementById("task-message").style.display = "none";
     const taskElement = document.createElement("div");
     taskElement.classList.add("task");
     taskElement.innerHTML = `
