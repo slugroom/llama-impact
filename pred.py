@@ -10,6 +10,7 @@ class Llama_frisian:
         # model_id = "meta-llama/Llama-3.2-1B"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
         self.model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float16)
+        # self.model = AutoModelForCausalLM.from_pretrained(model_id) # for Josh
 
     def error_correct(self, txt):
 
@@ -23,7 +24,7 @@ class Llama_frisian:
         corrected = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=False)[0]
 
         try:
-            corrected = corrected.split("### Corrected:")[1]
+            corrected = corrected.split(" ### Corrected:\xa0")[1].split("  ")[0]
         except IndexError:
             corrected = corrected
         finally:
