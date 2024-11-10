@@ -11,6 +11,7 @@ postprocessed
 *.csv
 processed
 llama_finetuned
+testing_set
 llama_finetuned_haukur
 corpus
 corpus2

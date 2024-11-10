@@ -32,7 +32,6 @@ class Wave2Vec2_frisian:
 
             return speech
 
-
     def speech_to_text(self, speech):
         inputs = self.processor(speech, sampling_rate=16_000, return_tensors="pt", padding=True)
 
@@ -52,7 +51,7 @@ class Wave2Vec2_frisian:
 # corrected = llama.error_correct("de snoeskjirne nei fleurich blinkend yn it middeislacht")
 # print(corrected)
 
-wav2vec2 = Wave2Vec2_frisian()
-text = wav2vec2.predict("corpus/fy-NL/clips/common_voice_fy-NL_40989988.mp3")
-print(text)
+# wav2vec2 = Wave2Vec2_frisian()
+# text = wav2vec2.predict("corpus/fy-NL/clips/common_voice_fy-NL_40989988.mp3")
+# print(text)
 
