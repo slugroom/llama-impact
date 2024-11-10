@@ -18,6 +18,6 @@ def file_upload():
     llama_corrected_text = llamaFrisian.predict(original_text)
 
     return {
-        "original_text": orignal_text,
-        "llama_corrected_text": llama_corrected_text,
+        "original": original_text,
+        "corrected": llama_corrected_text,
     }
