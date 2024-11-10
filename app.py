@@ -10,7 +10,13 @@ app = flask.Flask(__name__)
 def main_page():
     return flask.render_template('index.html')
 
+<<<<<<< HEAD
 from flask import request, jsonify
+=======
+@app.route("/data-send", methods=['POST'])
+def file_upload():
+    file = request.data
+>>>>>>> 8cdce29e6c4bafc39e3956d5fc2ae2200d1f27f5
 
 @app.route("/data-send", methods=['POST'])
 def file_upload():
