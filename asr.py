@@ -26,10 +26,10 @@ def process_dataset_in_parallel(dataset, func, num_workers=4):
         dataset = list(executor.map(func, dataset))
     return Dataset.from_list(dataset)
 
-batch_size = 64
-data_chunk_size = batch_size * 16
-pass_size = data_chunk_size * 8
-pass_count = 7
+batch_size = 2
+data_chunk_size = batch_size * 2
+pass_size = data_chunk_size * 2
+pass_count = 9
 
 while True:
 

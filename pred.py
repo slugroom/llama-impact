@@ -18,6 +18,6 @@ class Llama_frisian:
 
 llama = Llama_frisian("llama_finetuned")
 
-corrected = llama.error_correct("de manne s il earrer feroardiele foar it riden ûnder ynfloet")
+corrected = llama.error_correct("wy knipperje middeis heel even want dit jetlag slocht sûnder genede ta")
 
 print(corrected)

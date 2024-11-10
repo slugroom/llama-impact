@@ -16,7 +16,7 @@ import os
 
 print("loading data")
 
-parent_dir = "./processed/"
+parent_dir = "./postprocessed/"
 csv_files = os.listdir(parent_dir)
 csv_files = [parent_dir + path for path in csv_files]
 
@@ -32,7 +32,7 @@ filtered_df = df[df['prediction'].str.len().le(max_length) & df['reference'].str
 df = filtered_df
 
 ds = Dataset.from_pandas(df)
-ds = ds.remove_columns(["string_length", "__index_level_0__"])
+ds = ds.remove_columns(["string_length"])
 
 
 print(ds)
@@ -47,7 +47,7 @@ ds.push_to_hub("slugroom/rjochtwurd-dataset")
 print("loading model and tokenizer")
 
 model_id = "llama_finetuned"
-model_id = "./results/checkpoint-5"
+# model_id = "./results/checkpoint-5"
 
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 model = AutoModelForCausalLM.from_pretrained(model_id)
