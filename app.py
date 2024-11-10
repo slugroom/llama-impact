@@ -1,4 +1,4 @@
-import flask
+from flask import request, jsonify
 import pred
 
 speechToText = pred.Wave2Vec2_frisian
@@ -10,14 +10,22 @@ app = flask.Flask(__name__)
 def main_page():
     return flask.render_template('index.html')
 
-@app.rout("/data-send", methods=['POST'])
-def file_upload():
-    file = request.data
+from flask import request, jsonify
 
-    original_text        = speechToText.predict(file)
+@app.route("/data-send", methods=['POST'])
+def file_upload():
+    file = request.files.get("audio_data")
+    audio_type = request.form.get("type")
+    
+    if not file:
+        return jsonify({"error": "No file provided"}), 400
+    
+    audio_data = file.read()
+
+    original_text = speechToText.predict(audio_data)
     llama_corrected_text = llamaFrisian.predict(original_text)
 
-    return {
+    return jsonify({
         "original": original_text,
-        "corrected": llama_corrected_text,
-    }
+        "corrected": llama_corrected_text
+    })
