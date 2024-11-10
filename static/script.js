@@ -8,7 +8,7 @@ var tasks = [];
 
 const createTask = taskName => {
     if (taskName.length > MAX_TASKNAME_LENGTH) taskName = taskName.slice(0, MAX_TASKNAME_LENGTH) + "...";
-    if (tasks.length === 0) document.getElementById("task-message").style.display = "none";
+    if (tasks.filter(x => x).length === 0) document.getElementById("task-message").style.display = "none";
     const taskElement = document.createElement("div");
     taskElement.classList.add("task");
     taskElement.innerHTML = `
@@ -47,7 +47,7 @@ const deleteTask = (index, elm) => {
     if (tasks[index][3]) {
         elm.parentElement.remove();
         tasks[index] = undefined;
-        if (tasks.length === 0) document.getElementById("task-message").style.display = "";
+        if (tasks.filter(x => x).length === 0) document.getElementById("task-message").style.display = "";
     } else alert("Please wait for the task to finish.");
 };
 
@@ -134,7 +134,8 @@ const audioHandler = stream => {
 };
 
 const queueUpload = () => {
-    const files = inputElement.files;
+    const files = inputElement.files.slice(0,3);
+
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         if(file.type === "audio/mpeg") {

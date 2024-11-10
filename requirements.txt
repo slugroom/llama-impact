@@ -3,6 +3,6 @@ datasets
 soundfile
 peft
 trl
-# flask
+flask
 evaluate
-# transformers[torch]
+transformers[torch]
