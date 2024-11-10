@@ -13,11 +13,22 @@ class Llama_frisian:
 
     def error_correct(self, txt):
 
-        in_txt = f"The following is a Frisian audio transcription, some parts of the transcription may be incorrect. Correct the transcription by making it grammatically and phonetically accurate.\n ### Transcription: {txt} \n ### Corrected: "
+        in_txt = f"The following is a Frisian audio transcription, some parts of the transcription may be incorrect. Correct the transcription by making it grammatically and phonetically accurate.\n ### Transcription: {txt} \n ### Corrected:"
         model_inputs = self.tokenizer([in_txt], return_tensors="pt")
+
         generated_ids = self.model.generate(**model_inputs, max_new_tokens=50, num_beams=4, do_sample=True, eos_token_id=self.tokenizer.eos_token_id)
 
-        return self.tokenizer.batch_decode(generated_ids, skip_special_tokens=False)[0]
+
+        # remove prompt from generated text
+        corrected = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=False)[0]
+
+        try:
+            corrected = corrected.split("### Corrected:")[1]
+        except IndexError:
+            corrected = corrected
+        finally:
+            return corrected
+
 
 class Wave2Vec2_frisian:
     def __init__(self, model_id="wietsedv/wav2vec2-large-xlsr-53-frisian"):

@@ -4,6 +4,8 @@ import pandas as pd
 import os
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from pred import Llama_frisian
+from datasets import load_dataset
+import matplotlib.pyplot as plt
 
 
 wer_metric = load("wer")
@@ -11,45 +13,60 @@ cer_metric = load("cer")
 normalizer = BasicTextNormalizer()
 
 llama = Llama_frisian("slugroom/llama_rjochtwurd")
+ds = load_dataset("slugroom/rjochtwurd-dataset")
 
 filtered_data = []
 
-parent_dir = "./testing_set"
-file_paths = os.listdir(parent_dir)
-file_paths = [parent_dir + file_path for file_path in file_paths if ".csv" in file_path]
+test_data = ds["test"].select(range(2))
 
-for file_path in file_paths:
+def evaluation(example):
+    prediction = example["prediction"]
+    reference = example["reference"]
+    wer_pred = example["wer"]
     
-    print(f"Processing file: {file_path}")
-    dataset = pd.read_csv(file_path, sep="\t")
-    
-    for _, row in dataset.iterrows():
-        prediction = row["prediction"]
-        reference = row["reference"]
-        wer_pred = row["wer"]
+    if isinstance(prediction, str) and isinstance(reference, str):
+        corrected = llama.error_correct(prediction)
         
-        if isinstance(prediction, str) and isinstance(reference, str):
-            corrected = llama.error_correct(prediction)
-            normalized_correction = normalizer(corrected)
-            normalized_reference = normalizer(reference)
-            
-            wer_corr = wer_metric.compute(predictions=[normalized_correction], references=[normalized_reference])
-            cer_pred = cer_metric.compute(predictions=[normalized_correction], references=[normalized_reference])
-            cer_corr = cer_metric.compute(predictions=[normalized_correction], references=[normalized_reference])
-            
-            
-            filtered_data.append({
-                "prediction": prediction,
-                "corrected": corrected,
-                "reference": reference,
-                "wer_pred": wer_pred,
-                "wer_corr": wer_corr,
-                "cer_pred": cer_corr,
-                "cer_corr": cer_corr
-            })
+        wer_corr = wer_metric.compute(predictions=[corrected], references=[reference])
+        cer_pred = cer_metric.compute(predictions=[corrected], references=[reference])
+        cer_corr = cer_metric.compute(predictions=[corrected], references=[reference])
+        
+        example["corrected"] = corrected
+        example["reference"] = reference
+
+        example["wer_corr"] = wer_corr
+        example["wer_pred"] = wer_pred
+
+        example["cer_pred"] = cer_pred
+        example["cer_corr"] = cer_corr
+
+        return example
 
 
-new_file_path = f"./measurements.csv"
-filtered_df = pd.DataFrame(filtered_data)
+test_data = test_data.map(evaluation, desc="Evaluating")
 
-filtered_df.to_csv(new_file_path, sep="\t", index=False)
+print(test_data[:2])
+
+test_data = test_data.filter(lambda x: x is not None, desc="Filtering out None values")
+
+
+
+# calculate mean median and std of wer and cer (for llama predictions)
+wer_pred = test_data["wer"].mean()
+wer_corr = test_data["wer_corr"].mean()
+wer_diff = wer_pred - wer_corr
+
+cer_pred = test_data["cer"].mean()
+cer_corr = test_data["cer_corr"].mean()
+cer_diff = cer_pred - cer_corr
+
+print("Llama Frisian")
+print(f"WER: {wer_pred} -> {wer_corr} ({wer_diff})")
+print(f"CER: {cer_pred} -> {cer_corr} ({cer_diff})")
+
+# calculate mean median and std of wer and cer (for wav2vec2 predictions)
+
+
+
+
+
