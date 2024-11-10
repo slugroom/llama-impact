@@ -7,15 +7,15 @@ from peft import LoraConfig
 from trl import SFTConfig, SFTTrainer, DataCollatorForCompletionOnlyLM
 import matplotlib.pyplot as plt
 
-model_id = "./llama3"
+model_id = "meta-llama/Llama-3.2-3B"
 
-tokenizer = AutoTokenizer.from_pretrained("./llama3")
+tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.2-3B")
 tokenizer.pad_token = tokenizer.eos_token
 
 #model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-1B", load_in_8bit=True, device_map="auto")
-model = AutoModelForCausalLM.from_pretrained("./llama3")
+model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3.2-3B")
 
-parent_dir = "./processed/"
+parent_dir = "./postprocessed/"
 csv_files = os.listdir(parent_dir)
 csv_files = [parent_dir + path for path in csv_files]
 
@@ -32,7 +32,6 @@ plt.savefig('hist.png')
 
 max_length = 40  # Adjust this as needed
 
-# Filter rows where both 'pred' and 'true' are within the max length
 filtered_df = df[df['prediction'].str.len().le(max_length) & df['reference'].str.len().le(max_length)]
 df = filtered_df
 
@@ -40,14 +39,16 @@ ds = Dataset.from_pandas(df)
 ds = ds.remove_columns(["string_length", "__index_level_0__"])
 
 
-ds = ds.train_test_split(test_size=0.05, shuffle=False)
+ds = ds.train_test_split(test_size=0.05, shuffle=True)
 
 print(ds)
 
 def formatting_prompts_func(example):
     output_texts = []
     for i in range(len(example['prediction'])):
-        text = f"### Prediction: {example['prediction'][i]}\n ### Corrected: {example['reference'][i]}"
+        # text = f"### Prediction: {example['prediction'][i]}\n ### Corrected: {example['reference'][i]}"
+        text = f"The following is a Frisian audio transcription, some parts of the transcription may be incorrect. Correct the transcription by making it grammatically and phonetically accurate.\n ### Transcription: {example['prediction'][i]} \n ### Corrected: {example['reference'][i]}{tokenizer.eos_token}"
+
         output_texts.append(text)
     return output_texts
 
@@ -57,35 +58,38 @@ collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=tokenize
 
 # PEFT config
 lora_alpha = 16
-lora_dropout = 0.1
-lora_r = 64  # 64
+lora_dropout = 0.2
+lora_r = 16 
 peft_config = LoraConfig(
     lora_alpha=lora_alpha,
     lora_dropout=lora_dropout,
     r=lora_r,
-    bias="none",
+    bias="all",
     task_type="CAUSAL_LM",
-    target_modules=["k_proj", "q_proj", "v_proj", "up_proj", "down_proj", "gate_proj"],
+    target_modules=["k_proj", "q_proj", "v_proj"],
     modules_to_save=["embed_tokens", "input_layernorm", "post_attention_layernorm", "norm"],
 )
 
 training_arguments = TrainingArguments(
     output_dir="./results",
-    per_device_train_batch_size=1, # increase if you can
+    per_device_train_batch_size=4,
     per_device_eval_batch_size=1, 
-    gradient_accumulation_steps=4, # increase when memeory issue
-    optim="adamw_torch",
-    save_steps=50,
+    gradient_accumulation_steps=4,
+    optim="adamw_hf",
+    save_steps=500,
     logging_steps=5,
     learning_rate=2e-4,
-    fp16=False, # Change this to True for efficiency
-    max_grad_norm=0.3,
+    fp16=False,
+    max_grad_norm=1,
+    weight_decay=0.01,
     save_total_limit=3,
     # max_steps=100,
-    num_train_epochs=2,
+    num_train_epochs=4,
     warmup_ratio=0.1,
     group_by_length=True,
-    lr_scheduler_type="cosine",
+    lr_scheduler_type="linear",
+    evaluation_strategy="steps",
+    eval_steps=500,
     gradient_checkpointing=True,  # gradient checkpointing
     #report_to="wandb",
 )

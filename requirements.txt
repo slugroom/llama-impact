@@ -3,4 +3,5 @@ datasets
 soundfile
 peft
 trl
+flask
 # transformers[torch]
