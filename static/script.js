@@ -9,6 +9,7 @@ const toggleRecording = () => {
     audioChunks = [];
     if (recording) rec.stop();
     else rec.start();
+    document.getElementById("record-button").style.aspectRatio = recording ? "1 / 1" : "";
     recording = !recording;
 };
 
