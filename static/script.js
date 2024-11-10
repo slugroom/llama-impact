@@ -7,7 +7,7 @@ const inputElement = document.getElementById("drop-input");
 var tasks = [];
 
 const createTask = taskName => {
-    if (taskName.length > MAX_TASKNAME_LENGTH) taskName.slice(0, MAX_TASKNAME_LENGTH) + "...";
+    if (taskName.length > MAX_TASKNAME_LENGTH) taskName = taskName.slice(0, MAX_TASKNAME_LENGTH) + "...";
     if (tasks.length === 0) document.getElementById("task-message").style.display = "none";
     document.getElementById("tasks-wrapper").innerHTML += `<div class='task'>
         <div class='task-name'>${taskName}</div>
@@ -16,13 +16,14 @@ const createTask = taskName => {
     </div>`;
     tasks.push([
         document.getElementsByClassName("task")[tasks.length],
-        "No text available yet. Processing is in order.",
-        ""
+        "No text available yet. Processing is in progress...",
+        "No text available yet. Processing is in progress...",
+        false
     ]);
 };
 
 const editTask = index => {
-    
+
 };
 
 const deleteTask = () => {
@@ -30,24 +31,58 @@ const deleteTask = () => {
 };
 
 const sendData = async (blob, filename) => {
-    const formData = new FormData();
-    formData.append("audio_data", blob, "file");
-    formData.append("type", "mp3");
-
-    const apiUrl = "/audio";
     const index = JSON.parse(JSON.stringify(tasks.length));
+    const formData = new FormData();
+    formData.append("audio_data", blob, "audio.mp3");
+
+    const apiUrl = "/data-send";
     createTask(filename);
     const response = await fetch(apiUrl, {
         method: "POST",
         cache: "no-cache",
         body: formData
     });
-    let result = { "original": "Invalid HTTP response.", "corrected": "Invalid HTTP response." };
-    if (response.ok) result = response.json();
-
-    tasks[index][1] = result.original;
-    tasks[index][2] = result.corrected;
+    if (response.ok) {
+        const { task_id } = await response.json();
+        
+        checkTaskStatus(task_id, index);
+    } else {
+        tasks[index][1] = "Error sending data.";
+        tasks[index][2] = "Error sending data.";
+        tasks[index][3] = true;
+    }
 };
+
+const checkTaskStatus = async (task_id, index) => {
+    const statusUrl = `/task-status/${task_id}`;
+    
+    const poll = async () => {
+        const response = await fetch(statusUrl);
+        if (response.ok) {
+            const taskInfo = await response.json();
+            
+            if (taskInfo.status === "completed") {
+                tasks[index][1] = taskInfo.result.original;
+                tasks[index][2] = taskInfo.result.corrected;
+                tasks[index][3] = true;
+            } else if (taskInfo.status === "failed") {
+                tasks[index][1] = "Error processing data.";
+                tasks[index][2] = "Error processing data.";
+                tasks[index][3] = true;
+                console.error(taskInfo.error);
+            } else {
+                setTimeout(poll, 3000);
+            }
+        } else {
+            tasks[index][1] = "Error retrieving status.";
+            tasks[index][2] = "Error retrieving status.";
+            tasks[index][3] = true;
+        }
+    };
+    
+    poll();
+};
+
 
 const toggleRecording = () => {
     audioChunks = [];
@@ -74,9 +109,7 @@ const queueUpload = () => {
     const files = inputElement.files;
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        console.log(file.type)
         if(file.type === "audio/mpeg") {
-            console.log(file)
             sendData(file, file.name);
         }
     }
