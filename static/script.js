@@ -47,7 +47,7 @@ const deleteTask = (index, elm) => {
     if (tasks[index][3]) {
         elm.parentElement.remove();
         tasks[index] = undefined;
-        if (tasks.length === 0) document.getElementById("task-message").style.display = "";
+        if (tasks.filter(x => x).length === 0) document.getElementById("task-message").style.display = "";
     } else alert("Please wait for the task to finish.");
 };
 
