@@ -64,7 +64,7 @@ def load_predictions():
 
 if __name__ == "__main__":
     if not os.path.exists("evaluation.csv"):
-        df = save_predictions()
+        df = save_predictions(max_samples=100)
     else:
         df = load_predictions()
 
