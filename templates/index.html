@@ -9,30 +9,19 @@
         <div id='main-container'>
             <div id='task-panel'>
                 <div id='tasks-wrapper'>
-                    <div class='task'>
-                        <div class='task-name'>Task 1</div>
-                        <button class='task-button edit-button' type='button'></button>
-                        <button class='task-button delete-button' type='button'></button>
-                    </div>
-                    <div class='task'>
-                        <div class='task-name'>Task 2</div>
-                        <button class='task-button edit-button' type='button'></button>
-                        <button class='task-button delete-button' type='button'></button>
-                    </div>
-                    <div class='task'>
-                        <div class='task-name'>Task 3</div>
-                        <button class='task-button edit-button' type='button'></button>
-                        <button class='task-button delete-button' type='button'></button>
-                    </div>
+                    <div id="task-message">No tasks present.</div>
                 </div>
                 <div id='toolbar'>
-                    <button id='record-button'></button>
-                    <button id='upload-button'></button>
+                    <div id='record-button'></div>
+                    <div id='upload-button'><input type="file" id="drop-input"></div>
                 </div>
             </div>
             <div id="text-area">
                 <h1>Orizjineel tekst</h1>
             </div>
         </div>
+        <audio id="recordedAudio"></audio>
+        
+        <script src="{{ url_for('static', filename='script.js') }}" type="text/javascript"></script>
     </body>
 </html>

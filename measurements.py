@@ -1,23 +1,16 @@
 from evaluate import load
-from transformers.models.whisper.english_normalizer import BasicTextNormalizer
-import pandas as pd
-import os
-from transformers import AutoModelForCausalLM, AutoTokenizer
 from pred import Llama_frisian
 from datasets import load_dataset
 import matplotlib.pyplot as plt
+import pandas as pd
+import os
 
 
 wer_metric = load("wer")
 cer_metric = load("cer")
-normalizer = BasicTextNormalizer()
 
 llama = Llama_frisian("slugroom/llama_rjochtwurd")
-ds = load_dataset("slugroom/rjochtwurd-dataset")
 
-filtered_data = []
-
-test_data = ds["test"].select(range(2))
 
 def evaluation(example):
     prediction = example["prediction"]
@@ -43,12 +36,45 @@ def evaluation(example):
         return example
 
 
-test_data = test_data.map(evaluation, desc="Evaluating")
 
-print(test_data[:2])
+def save_predictions(max_samples=None):
+    ds = load_dataset("slugroom/rjochtwurd-dataset")
 
-test_data = test_data.filter(lambda x: x is not None, desc="Filtering out None values")
+    if max_samples is not None and isinstance(max_samples, int):
+        test_data = ds["test"].select(range(max_samples))
+    else:
+        test_data = ds["test"]
+
+    test_data = test_data.map(evaluation, desc="Evaluating")
+
+    test_data = test_data.filter(lambda x: x is not None, desc="Filtering out None values")
 
 
+    df = test_data.to_pandas()
 
+    df.to_csv("evaluation.csv")
+
+    return df
+
+
+def load_predictions():
+    df = pd.read_csv("evaluation.csv")
+    return df
+
+
+if __name__ == "__main__":
+    if not os.path.exists("evaluation.csv"):
+        df = save_predictions()
+    else:
+        df = load_predictions()
+
+    print(df.head())
+
+
+    # statistics
+
+    stats = df.describe()
+    stats.to_csv("statistics.csv")
+
+    print(stats)
 
