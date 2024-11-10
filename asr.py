@@ -69,7 +69,7 @@ while True:
             
             wer = wer_metric.compute(predictions=[normalized_prediction], references=[normalized_reference])
             
-            if wer >= 0.25:
+            if wer >= 0.25 and wer <= 0.8:
                 predictions.append(prediction)
                 references.append(reference)
         

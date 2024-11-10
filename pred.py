@@ -7,7 +7,8 @@ class Llama_frisian:
         self.model = AutoModelForCausalLM.from_pretrained(model_id)
 
     def error_correct(self, txt):
-        in_txt = f"### Prediction: {txt} ### Corrected: "
+
+        in_txt = f"The following is a Frisian audio transcription, some parts of the transcription may be incorrect. Correct the transcription by making it grammatically and phonetically accurate.\n ### Transcription: {txt} \n ### Corrected: "
         model_inputs = self.tokenizer([in_txt], return_tensors="pt")
         generated_ids = self.model.generate(**model_inputs, max_new_tokens=50, num_beams=4, do_sample=True)
 
@@ -17,6 +18,6 @@ class Llama_frisian:
 
 llama = Llama_frisian("llama_finetuned")
 
-corrected = llama.error_correct("dy soarch is foarn mer jochte op it rela te follen fan passin")
+corrected = llama.error_correct("de manne s il earrer feroardiele foar it riden ûnder ynfloet")
 
 print(corrected)

@@ -4,11 +4,14 @@ llama3/
 *.DS_Store
 
 # data
+my_env
+postprocessed
 *.tar.gz
 *.tar
 *.csv
 processed
 llama_finetuned
+llama_finetuned_haukur
 corpus
 corpus2
 <<<<<<< HEAD
