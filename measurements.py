@@ -51,22 +51,4 @@ test_data = test_data.filter(lambda x: x is not None, desc="Filtering out None v
 
 
 
-# calculate mean median and std of wer and cer (for llama predictions)
-wer_pred = test_data["wer"].mean()
-wer_corr = test_data["wer_corr"].mean()
-wer_diff = wer_pred - wer_corr
-
-cer_pred = test_data["cer"].mean()
-cer_corr = test_data["cer_corr"].mean()
-cer_diff = cer_pred - cer_corr
-
-print("Llama Frisian")
-print(f"WER: {wer_pred} -> {wer_corr} ({wer_diff})")
-print(f"CER: {cer_pred} -> {cer_corr} ({cer_diff})")
-
-# calculate mean median and std of wer and cer (for wav2vec2 predictions)
-
-
-
-
 
