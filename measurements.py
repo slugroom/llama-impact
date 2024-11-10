@@ -3,33 +3,17 @@ from transformers.models.whisper.english_normalizer import BasicTextNormalizer
 import pandas as pd
 import os
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from pred import Llama_frisian
 
-
-
-class Llama_frisian:
-    def __init__(self, model_id="./llama3"):
-        # model_id = "meta-llama/Llama-3.2-1B"
-        self.tokenizer = AutoTokenizer.from_pretrained(model_id)
-        self.model = AutoModelForCausalLM.from_pretrained(model_id)
-
-    def error_correct(self, txt):
-
-        in_txt = f"The following is a Frisian audio transcription, some parts of the transcription may be incorrect. Correct the transcription by making it grammatically and phonetically accurate.\n ### Transcription: {txt} \n ### Corrected: "
-        model_inputs = self.tokenizer([in_txt], return_tensors="pt")
-        generated_ids = self.model.generate(**model_inputs, max_new_tokens=50, num_beams=4, do_sample=True, eos_token_id=self.tokenizer.eos_token_id)
-
-        return self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
-
-
-index = 0
-llama = Llama_frisian("llama_finetuned")
 
 wer_metric = load("wer")
 cer_metric = load("cer")
 normalizer = BasicTextNormalizer()
 
-filtered_data = []
+llama = Llama_frisian("slugroom/llama_rjochtwurd")
 
+index = 0
+filtered_data = []
 while True:
     file_path = f"./testing_set/processed_data_" + str(index) + ".csv"
     
