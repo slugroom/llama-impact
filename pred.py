@@ -2,6 +2,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 import torchaudio
 import torch
+from io import BytesIO
 
 torch.backends.cuda.matmul.allow_tf32 = True
 
@@ -17,8 +18,10 @@ class Llama_frisian:
         in_txt = f"The following is a Frisian audio transcription, some parts of the transcription may be incorrect. Correct the transcription by making it grammatically and phonetically accurate.\n ### Transcription: {txt} \n ### Corrected:"
         model_inputs = self.tokenizer([in_txt], return_tensors="pt")
 
+        print("Generate")
         generated_ids = self.model.generate(**model_inputs, max_new_tokens=50, num_beams=4, do_sample=True, eos_token_id=self.tokenizer.eos_token_id)
 
+        print("Decode")
 
         # remove prompt from generated text
         corrected = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=False)[0]
@@ -37,12 +40,12 @@ class Wave2Vec2_frisian:
         self.model = Wav2Vec2ForCTC.from_pretrained(model_id)
         self.resampler = torchaudio.transforms.Resample(48_000, 16_000)
 
+    def preprocess_audio_data(self, audio_data):
+        audio_stream = BytesIO(audio_data)
+        speech_array, _ = torchaudio.load(audio_stream, format="mp3")
 
-    def speech_file_to_array_fn(self, file_path):
-            speech_array, _ = torchaudio.load(file_path)
-            speech = self.resampler(speech_array).squeeze(0).numpy()
-
-            return speech
+        speech = self.resampler(speech_array).squeeze(0).numpy()
+        return speech
 
     def speech_to_text(self, speech):
         inputs = self.processor(speech, sampling_rate=16_000, return_tensors="pt", padding=True)
@@ -52,10 +55,12 @@ class Wave2Vec2_frisian:
 
         predicted_ids = torch.argmax(logits, dim=-1)
 
+        print(self.processor.batch_decode(predicted_ids)[0])
         return self.processor.batch_decode(predicted_ids)[0]
 
-    def predict(self, file_path):
-        speech = self.speech_file_to_array_fn(file_path)
+    def predict(self, audio_data):
+        speech = self.preprocess_audio_data(audio_data)
+        print("Predicting")
         return self.speech_to_text(speech)
 
 
