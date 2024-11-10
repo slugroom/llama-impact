@@ -23,7 +23,7 @@ class Llama_frisian:
         corrected = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=False)[0]
 
         try:
-            corrected = corrected.split("### Corrected:")[1]
+            corrected = corrected.split(" ### Corrected:\xa0")[1].split("  ")[0]
         except IndexError:
             corrected = corrected
         finally:

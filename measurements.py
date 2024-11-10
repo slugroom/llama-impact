@@ -22,12 +22,12 @@ test_data = ds["test"].select(range(2))
 def evaluation(example):
     prediction = example["prediction"]
     reference = example["reference"]
-    wer_pred = example["wer"]
     
     if isinstance(prediction, str) and isinstance(reference, str):
         corrected = llama.error_correct(prediction)
         
-        wer_corr = wer_metric.compute(predictions=[corrected], references=[reference])
+        wer_pred = wer_metric.compute(predictions=[prediction], references=[reference])
+        wer_corr = wer_metric.compute(predictions=[prediction], references=[reference])
         cer_pred = cer_metric.compute(predictions=[corrected], references=[reference])
         cer_corr = cer_metric.compute(predictions=[corrected], references=[reference])
         
