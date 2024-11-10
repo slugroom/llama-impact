@@ -12,7 +12,7 @@ const createTask = taskName => {
     const taskElement = document.createElement("div");
     taskElement.classList.add("task");
     taskElement.innerHTML = `
-        <div class='task-name' onclick='openTask(${tasks.length});'>${taskName}</div>
+        <div class='task-name' onclick='openTask(${tasks.length});'>Fetching...</div>
         <button class='task-button edit-button' onclick='editTask(${tasks.length});' type='button'></button>
         <button class='task-button delete-button' onclick='deleteTask(${tasks.length}, this);' type='button'></button>
     `;
@@ -21,7 +21,8 @@ const createTask = taskName => {
         taskElement,
         "No text available yet. Processing is in progress...",
         "No text available yet. Processing is in progress...",
-        false
+        false,
+        taskName
     ]);
 };
 
@@ -70,6 +71,8 @@ const sendData = async (blob, filename) => {
         tasks[index][1] = "Error sending data.";
         tasks[index][2] = "Error sending data.";
         tasks[index][3] = true;
+        tasks[index][4] = "Failed!";
+        tasks[index][0].getElementsByClassName("task-name")[0].innerText = tasks[index][4];
     }
 };
 
@@ -85,10 +88,13 @@ const checkTaskStatus = async (task_id, index) => {
                 tasks[index][1] = taskInfo.result.original;
                 tasks[index][2] = taskInfo.result.corrected;
                 tasks[index][3] = true;
+                tasks[index][0].getElementsByClassName("task-name")[0].innerText = tasks[index][4];
             } else if (taskInfo.status === "failed") {
                 tasks[index][1] = "Error processing data.";
                 tasks[index][2] = "Error processing data.";
                 tasks[index][3] = true;
+                tasks[index][4] = "Failed!";
+                tasks[index][0].getElementsByClassName("task-name")[0].innerText = tasks[index][4];
                 console.error(taskInfo.error);
             } else {
                 setTimeout(poll, 3000);
@@ -97,6 +103,8 @@ const checkTaskStatus = async (task_id, index) => {
             tasks[index][1] = "Error retrieving status.";
             tasks[index][2] = "Error retrieving status.";
             tasks[index][3] = true;
+            tasks[index][4] = "Failed!";
+            tasks[index][0].getElementsByClassName("task-name")[0].innerText = tasks[index][4];
         }
     };
     
