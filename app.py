@@ -10,7 +10,7 @@ app = flask.Flask(__name__)
 def main_page():
     return flask.render_template('index.html')
 
-@app.rout("/data-send", methods=['POST'])
+@app.route("/data-send", methods=['POST'])
 def file_upload():
     file = request.data
 
