@@ -46,7 +46,7 @@ class Wave2Vec2_frisian:
 
     def speech_to_text(self, speech):
         inputs = self.processor(speech, sampling_rate=16_000, return_tensors="pt", padding=True)
-        inputs = {k: v.to("cpu") for k, v in inputs.items()}  # Ensure tensors are on CPU
+        # inputs = {k: v.to("cpu") for k, v in inputs.items()}  # Ensure tensors are on CPU
 
         with torch.no_grad():
             logits = self.model(inputs.input_values, attention_mask=inputs.attention_mask).logits
