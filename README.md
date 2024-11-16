@@ -38,7 +38,9 @@ Despite the limitations of the model, we believe that it has the potential to be
 Plotting the WER and CER metrics for the wav2vec2-large-xlsr-53-frisian by wietsedv model and the fine-tuned LLama model on a bar chart, with the error bars representing the standard deviation of the metrics, we can see that the post-processing via the fine-tuned Llama model decreases the accuracy of the transcription on average. However, the error bars are quite large, and in some cases the fine-tuned Llama model increases the accuracy of the transcription (see the figure below).
 
 
+<img src="./media/bars.png" style="width: 50%; height: auto;">
 
+<img src="./media/whiskers.png" style="width: 50%; height: auto;">
 
 
 ## Installation
