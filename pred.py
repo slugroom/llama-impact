@@ -4,14 +4,14 @@ import torchaudio
 import torch
 from io import BytesIO
 
-# torch.backends.cuda.matmul.allow_tf32 = True
+torch.backends.cuda.matmul.allow_tf32 = True
 
 class Llama_frisian:
     def __init__(self, model_id="slugroom/llama_rjochtwurd"):
         # model_id = "meta-llama/Llama-3.2-1B"
         self.tokenizer = AutoTokenizer.from_pretrained(model_id)
-        # self.model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float16).to("cpu")
-        self.model = AutoModelForCausalLM.from_pretrained(model_id).to("cpu") # for Josh
+        self.model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float16)
+        # self.model = AutoModelForCausalLM.from_pretrained(model_id).to("cpu") # for Josh
 
     def error_correct(self, txt):
 
@@ -34,7 +34,7 @@ class Llama_frisian:
 class Wave2Vec2_frisian:
     def __init__(self, model_id="wietsedv/wav2vec2-large-xlsr-53-frisian"):
         self.processor = Wav2Vec2Processor.from_pretrained(model_id)
-        self.model = Wav2Vec2ForCTC.from_pretrained(model_id).to("cpu")
+        self.model = Wav2Vec2ForCTC.from_pretrained(model_id)
         self.resampler = torchaudio.transforms.Resample(48_000, 16_000)
 
     def preprocess_audio_data(self, audio_data):

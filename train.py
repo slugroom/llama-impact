@@ -48,7 +48,6 @@ def formatting_prompts_func(example):
     for i in range(len(example['prediction'])):
         # text = f"### Prediction: {example['prediction'][i]}\n ### Corrected: {example['reference'][i]}"
         text = f"The following is a Frisian audio transcription, some parts of the transcription may be incorrect. Correct the transcription by making it grammatically and phonetically accurate.\n ### Transcription: {example['prediction'][i]} \n ### Corrected: {example['reference'][i]}{tokenizer.eos_token}"
-
         output_texts.append(text)
     return output_texts
 

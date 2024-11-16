@@ -7,7 +7,7 @@ make sure to be logged in
 >>> huggingface-cli login
 """
 
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, PeftModel
 from datasets import Dataset
 import pandas as pd
 import numpy as np
@@ -46,11 +46,13 @@ ds.push_to_hub("slugroom/rjochtwurd-dataset")
 
 print("loading model and tokenizer")
 
-model_id = "llama_finetuned"
-# model_id = "./results/checkpoint-5"
+lora_wheights = "slugroom/llama_rjochtwurd"
+base_model_id = "meta-llama/Llama-3.2-3B"
 
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForCausalLM.from_pretrained(model_id)
+tokenizer = AutoTokenizer.from_pretrained(base_model_id)
+
+model = AutoModelForCausalLM.from_pretrained(base_model_id)
+model = PeftModel.from_pretrained(model, lora_wheights)
 
 # to save the model and tokenizer to huggingface hub
 

@@ -134,7 +134,7 @@ const audioHandler = stream => {
 };
 
 const queueUpload = () => {
-    const files = inputElement.files.slice(0,3);
+    const files = inputElement.files;
 
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
