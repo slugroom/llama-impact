@@ -17,7 +17,7 @@ Frisian is a low-resource language spoken by around 400,000 thousand people in t
 
 We ran wav2vec2-large-xlsr-53-frisian by wietsedv a speech-to-text model for Frisian (available [here](wietsedv/wav2vec2-large-xlsr-53-frisian) on the validation set of the Frisian Common Voice Dataset and calculated the normalized word error rate (WER) and normalized character error rate (CER) to evaluate the model. Then we fine-tuned  Llama3.2 3B  to correct the errors in the transcription. We also evaluated the model using the WER and CER metrics. See table below for the results, ASR refers to the original transcription and Llama refers to the corrected transcription.
 
-| Statistic | WER (ASR)  | WER (Llama)  | CER (ASR)  | CER (LLama) |
+| Statistic | WER (Llama)  | WER (ASr)  | CER (Llama)  | CER (ASR) |
 |-----------|-----------|-----------|-----------|-----------|
 | count     | 100.00000 | 100.00000 | 100.00000 | 100.00000 |
 | mean      |  0.795456 | 0.603064  | 0.205363  | 0.408049  |

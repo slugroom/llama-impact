@@ -41,7 +41,7 @@ def correct_errors(text):
 demo = gr.Blocks()
 
 with demo:
-    gr.HTML("<h1>Frision Speech-to-Text Error Correction</h1>")
+    gr.HTML("<h1>Frisian Speech-to-Text Error Correction</h1>")
     gr.HTML("<p>Upload an audio file in Frisian and press 'Transcribe Audio' to transcribe the audio. The transcription will appear in the text box below. You can also type Frisian text in the text box to be corrected and press 'Correct Errors' to correct the text.</p>")
     gr.HTML("<p>Note that correcting the errors may take up to a minute.</p>")
 
@@ -59,5 +59,6 @@ with demo:
 
         b2 = gr.Button("Correct Errors")
         b2.click(correct_errors, inputs=text, outputs=corrected_text)
+
 
 demo.launch(server_port=5000)
