@@ -11,7 +11,7 @@ base_model_id = "meta-llama/Llama-3.2-3B"
 tokenizer = AutoTokenizer.from_pretrained(base_model_id)
 
 model = AutoModelForCausalLM.from_pretrained(base_model_id)
-model = PeftModel.from_pretrained(model, lora_wheights, torch_dtype=torch.float16, quantization_config=BitsAndBytesConfig(load_in_8bit=True)).to("cpu")
+model = PeftModel.from_pretrained(model, lora_wheights, torch_dtype=torch.float16, quantization_config=BitsAndBytesConfig(load_in_4bit=True)).to("cpu")
 
 asr = pipeline("automatic-speech-recognition", "wietsedv/wav2vec2-large-xlsr-53-frisian", device="cpu")
 
@@ -38,7 +38,7 @@ def correct_errors(text):
     return corrected
 
 
-demo = gr.Blocks()
+demo = gr.Blocks(title="Frisian Speech-to-Text Error Correction")
 
 with demo:
     gr.HTML("<h1>Frisian Speech-to-Text Error Correction</h1>")
